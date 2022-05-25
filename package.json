@@ -6,7 +6,9 @@
   "homepage": "https://romanblyashuk94.github.io/goit-js-hw-10",
   "scripts": {
     "dev": "parcel src/*.html",
-    "build": "parcel build src/*.html --public-url /goit-js-hw-10/"
+    "build": "parcel build src/*.html --public-url /goit-js-hw-10/",
+    "deploy": "gh-pages -d dist",
+    "predeploy": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,7 @@
     "sass": "^1.32.8"
   },
   "dependencies": {
+    "gh-pages": "^4.0.0",
     "lodash.debounce": "^4.0.8",
     "notiflix": "^3.2.5"
   }
