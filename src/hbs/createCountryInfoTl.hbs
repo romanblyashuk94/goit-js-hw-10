@@ -1,0 +1,21 @@
+{{#each this}}
+<div class = "country-info__title">
+            <span class = "country-info__flag">
+                <img src = "{{this.flags.svg}}">                
+            </span>
+            <div class = "country-info__name">{{this.name.official}}</div>        
+        </div>
+        <ul class="country-info__description">
+            <li class="country-info__item"><span class="country-info__item--subtitle">Capital: </span> {{
+              this.capital
+            }}</li>
+            <li class="country-info__item"><span class="country-info__item--subtitle">Population: </span> {{
+              this.population
+            }}</li>
+            <li class="country-info__item"><span class="country-info__item--subtitle">Languages: </span>
+            {{#each this.languages}}
+            {{this}}{{#unless @last}},{{/unless}}
+            {{/each}}
+            </li>
+        </ul>
+{{/each}}

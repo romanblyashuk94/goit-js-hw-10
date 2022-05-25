@@ -2,6 +2,8 @@ import './css/styles.css';
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
 import { fetchCountries } from './js/fetchCountries';
+import createCountryListTl from './hbs/createCountryListTl.hbs';
+import createCountryInfoTl from './hbs/createCountryInfoTl.hbs';
 
 const DEBOUNCE_DELAY = 300;
 
@@ -14,8 +16,7 @@ searchInputRef.addEventListener('input', debounce(onSerchingInput, DEBOUNCE_DELA
 function onSerchingInput(e) {
   const searchingValue = e.target.value.trim();
   if (!searchingValue) {
-    countryListRef.innerHTML = '';
-    countryInfoOutputRef.innerHTML = '';
+    removeAllMurkup();
     return;
   }
 
@@ -27,18 +28,16 @@ function onSerchingInput(e) {
       }
 
       if (responce.length > 1 && responce.length < 11) {
-        countryListRef.innerHTML = createCountryListMurkup(responce);
-        countryInfoOutputRef.innerHTML = '';
+        renderCountryListMurekup(responce);
         return;
       }
 
-      countryListRef.innerHTML = '';
-      countryInfoOutputRef.innerHTML = createCountryInfoMurkup(responce);
+      renderCountryInfoMurekup(responce);
     })
-    .catch(catchError);
+    .catch(oncatchError);
 }
 
-function catchError(error) {
+function oncatchError(error) {
   if (error === 404) {
     Notiflix.Notify.failure('Oops, there is no country with that name');
     return;
@@ -46,41 +45,17 @@ function catchError(error) {
   console.warn(`Error status ${error}`);
 }
 
-function createCountryInfoMurkup([country]) {
-  return `
-        <div class = "country-info__title">
-            <span class = "country-info__flag">
-                <img src = "${country.flags.svg}">                
-            </span>
-            <div class = "country-info__name">${country.name.official}</div>        
-        </div>
-        <ul class="country-info__description">
-            <li class="country-info__item"><span class="country-info__item--subtitle">Capital: </span> ${
-              country.capital
-            }</li>
-            <li class="country-info__item"><span class="country-info__item--subtitle">Population: </span> ${
-              country.population
-            }</li>
-            <li class="country-info__item"><span class="country-info__item--subtitle">Languages: </span> ${getLanguagesListString(
-              country.languages,
-            )}</li>
-        </ul>
-    `;
+function removeAllMurkup() {
+  countryListRef.innerHTML = '';
+  countryInfoOutputRef.innerHTML = '';
 }
 
-function getLanguagesListString(languages) {
-  return Object.values(languages).join(', ');
+function renderCountryListMurekup(countries) {
+  countryListRef.innerHTML = createCountryListTl(countries);
+  countryInfoOutputRef.innerHTML = '';
 }
 
-function createCountryListMurkup(сountries) {
-  return сountries
-    .map(
-      country => `<li class = "country-item">
-    <span class = "country-item__flag">
-    <img src = "${country.flags.svg}">
-    </span>
-    <span class = "country-item__name">${country.name.official}</span>
-    </li>`,
-    )
-    .join('');
+function renderCountryInfoMurekup(country) {
+  countryListRef.innerHTML = '';
+  countryInfoOutputRef.innerHTML = createCountryInfoTl(country);
 }
